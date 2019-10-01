@@ -3,6 +3,7 @@ import re
 import math
 import time
 import json
+import pickle
 import urllib.request as request
 import urllib.parse as parse
 from bs4 import BeautifulSoup
@@ -65,7 +66,10 @@ def find_items(group_name, post_type, terms, values = {}):
     posts = get_posts(group_name = group_name, values = values, post_type = post_type)
     return search_posts(posts, terms)
 
-all_items = set([])
+with open('items.pkl', 'a+') as item_file:
+    item_file.seek(0)
+    loaded_items = pickle.load(item_file)
+    all_items = loaded_items if type(loaded_items) is set else set([])
 while True:
     group_name, post_type, terms = read_config('config.json')
     items = set(find_items(group_name, post_type, terms))
@@ -73,4 +77,6 @@ while True:
     for item in new_items:
         notify(item.title, item.location, item.url)
     all_items.update(new_items)
+    with open('items.pkl', 'w') as item_file:
+        pickle.dump(all_items, item_file)
     time.sleep(600)
