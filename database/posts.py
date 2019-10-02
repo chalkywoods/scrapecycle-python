@@ -29,4 +29,31 @@ class Posts():
         query = self.session.query(Post).filter(text(query_string))
         return query.all()
 
-    
+class Boards():
+
+    def __init__(self, database):
+        self.database = database
+        engine = create_engine('sqlite:///{}'.format(database))
+        Base.metadata.bind = engine
+        DBSession = sessionmaker(bind=engine)
+        self.session = DBSession()
+
+    def add(self, name, location, unique_name, update_time = 0):
+        self.session.add(Board(name=name, location=location, unique_name=unique_name, update_time=update_time))
+        self.session.commit()
+
+    def get(self, **criteria):
+        queries = []
+        for key, value in criteria.items():
+            if type(value) is int:
+                queries.append('Board.{} == {}'.format(key, value))
+            else:
+                queries.append('Board.{} == "{}"'.format(key, value))
+        query_string = ' AND '.join(queries)
+        query = self.session.query(Board).filter(text(query_string))
+        return query.all()
+
+class Database():
+    def __init__(self, database):
+        self.boards = Boards(database)
+        self.posts = Posts(database)

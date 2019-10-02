@@ -19,7 +19,7 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 # Insert an Address in the address table
-new_board = Board(name='Sheffield City', location='Yorkshire and the Humber, United Kingdom', unique_name='SheffieldUK')
+new_board = Board(name='Sheffield City', location='Yorkshire and the Humber, United Kingdom', unique_name='SheffieldUK', update_time=0)
 session.add(new_board)
 session.commit()
 
