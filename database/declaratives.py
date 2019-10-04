@@ -21,8 +21,8 @@ class Post(Base):
     date = Column(Integer, nullable=False)
     name = Column(String(150), nullable=False)
     location = Column(String(150), nullable=False)
-    board_name = Column(String(100), ForeignKey('board.unique_name'))
-    board = relationship(Board)
+    group_name = Column(String(100), ForeignKey('board.unique_name'))
+    group = relationship(Board)
 
 # Create an engine that stores data in the local directory's
 # sqlalchemy_example.db file.
