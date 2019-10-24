@@ -4,7 +4,6 @@ import time
 import urllib.request as request
 import urllib.parse as parse
 from bs4 import BeautifulSoup
-from post import Post
 
 class Scraper():
     def __init__(self, database):
