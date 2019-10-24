@@ -23,6 +23,6 @@ new_board = Board(name='Sheffield City', location='Yorkshire and the Humber, Uni
 session.add(new_board)
 session.commit()
 
-new_post = Post(id=1, post_type='offer', date=0, name='A test post', location='here', group_name='SheffieldUK')
+new_post = Post(id=1, post_type='offer', date=0, name='A test post', location='here', update_time = 0, group_name='SheffieldUK')
 session.add(new_post)
 session.commit()

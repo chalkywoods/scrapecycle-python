@@ -4,7 +4,7 @@ from sqlalchemy.sql.expression import text
 from sqlalchemy.orm.exc import FlushError
 from sqlalchemy.exc import IntegrityError
 
-from declaratives import Base, Board, Post
+from database.declaratives import Base, Board, Post
 
 class Table():
     def __init__(self, session, declarative):
@@ -15,9 +15,9 @@ class Table():
         queries = []
         for key, value in criteria.items():
             if type(value) is int:
-                queries.append('{}.{} == {}'.format(self.declarative.__class__.__name__, key, value))
+                queries.append('{}.{} == {}'.format(self.declarative.__classname__, key, value))
             else:
-                queries.append('{}.{} == "{}"'.format(self.declarative.__class__.__name__, key, value))
+                queries.append('{}.{} == "{}"'.format(self.declarative.__classname__, key, value))
         query_string = ' AND '.join(queries)
         query = self.session.query(self.declarative).filter(text(query_string))
         return query.all()
@@ -34,9 +34,15 @@ class Posts(Table):
     def __init__(self, database):
         Table.__init__(self, database, Post)
 
-    def add(self, id, post_type, date, name, location, group_name):
+    def add(self, id, post_type, date, name, location, update_time, group_name):
         self.session.add(Post(id=id, post_type=post_type, date=date, name=name, 
-                                  location=location, group_name=group_name))
+                                  location=location, update_time=update_time, group_name=group_name))
+        return self.commit()
+
+    def addAll(self, posts):
+        for post in posts:
+            self.session.add(Post(id=post[0], post_type=post[1], date=post[2], name=post[3], 
+                                  location=post[4], update_time=post[5], group_name=post[6]))
         return self.commit()
 
 class Groups(Table):
@@ -56,3 +62,6 @@ class Database():
         self.session = DBSession()
         self.groups = Groups(self.session)
         self.posts = Posts(self.session)
+
+    def saved_group(self, group_name):
+        return False
