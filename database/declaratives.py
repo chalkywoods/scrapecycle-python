@@ -27,17 +27,17 @@ class Post(Base):
     update_time = Column(Integer, nullable=False)
     group_name = Column(String(100), ForeignKey('board.unique_name'))
     group = relationship("Board", back_populates="posts")
+    
+    def url(self):
+        return 'https://www.freecycle.org/group/{}/posts/{}'.format(self.group_name, self.id)
 
     def __str__(self):
-        return '{} in {}'.format(self.name, self.group_name)
+        return '{} in {}'.format(self.name, self.location)
     
     def __repr__(self):
         return '{} in {}'.format(self.name, self.group_name)
 
-# Create an engine that stores data in the local directory's
-# sqlalchemy_example.db file.
+
 engine = create_engine('sqlite:///freecycle.db')
 
-# Create all tables in the engine. This is equivalent to "Create Table"
-# statements in raw SQL.
 Base.metadata.create_all(engine)

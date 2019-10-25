@@ -1,6 +1,7 @@
 import re
 import math
 import time
+import datetime
 import urllib.request as request
 import urllib.parse as parse
 from bs4 import BeautifulSoup
@@ -82,8 +83,10 @@ class Scraper():
             for char in ' #()': post_id=post_id.replace(char,"")
             id = int(post_id)
             name = post.contents[3].contents[1].string
-            location = 'here'
-            date = 0
+            location = post.contents[3].contents[2].string
+            for char in '()': location=location.replace(char,"")
+            textDate = post.contents[1].contents[4]
+            date = int(datetime.datetime.strptime(textDate, ' %a %b %d %H:%M:%S %Y').timestamp())
             post_type = post.contents[1].contents[1].contents[1].contents[1].lower().replace(' ','')
             parsetime += time.time() - timer
             if not id in oldIds:
